@@ -107,7 +107,7 @@ int main()
         pEstoque = pBuffer + sizeof(int) + sizeof(char) * 50;
         pPreco = pBuffer + sizeof(int) + sizeof(char) * 50 + sizeof(int);
 
-        printf("\nCodigo: ");
+        printf("\n----------\nCodigo: ");
         printf("%d", *pId);
         printf("\nNome: ");
         printf("%s", pNome);
@@ -143,10 +143,9 @@ int main()
         {
             pId = pBuffer;
             pNome = pBuffer + sizeof(int);
-            // pEstoque = pBuffer + sizeof(int) + sizeof(char) * 50;
+            pEstoque = pBuffer + sizeof(int) + sizeof(char) * 50;
             pPreco = pBuffer + sizeof(int) + sizeof(char) * 50 + sizeof(int);
             printf("%d", pPreco);
-            pEstoque = pPreco - sizeof(int);
 
 
             break;
@@ -164,7 +163,47 @@ int main()
     printf("\nPreco: R$ ");
     printf("%f", *pPreco);
 
-    
+    int maiorEstoque;
+    prodContador = buffer;
+
+    for (int i = 1; i <= n; i++)
+    {
+        pBuffer = prodContador;
+        pEstoque = pBuffer + sizeof(int) + sizeof(char) * 50;
+
+        if (i == 1)
+            maiorEstoque = *pEstoque;
+        else if (maiorEstoque < *pEstoque)
+            maiorEstoque = *pEstoque;
+        prodContador++;
+    }
+
+    prodContador = buffer;
+
+    for (int i = 1; i <= n; i++)
+    {
+        pBuffer = prodContador;
+        pEstoque = pBuffer + sizeof(int) + sizeof(char) * 50;
+
+        if (maiorEstoque == *pEstoque)
+        {
+            pId = pBuffer;
+            pNome = pBuffer + sizeof(int);
+            pPreco = pBuffer + sizeof(int) + sizeof(char) * 50 + sizeof(int);
+            break;
+        }
+        prodContador++;
+    }
+
+    printf("\n------------\nMaior estoque\n");
+    printf("\nCodigo: ");
+    printf("%d", *pId);
+    printf("\nNome: ");
+    printf("%s", pNome);
+    printf("\nEstoque: ");
+    printf("%d", *pEstoque);
+    printf("\nPreco: R$ ");
+    printf("%f", *pPreco);
 
     free(buffer);
 
