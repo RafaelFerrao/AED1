@@ -16,8 +16,8 @@ int main() {
     pessoa_t *buffer = ( pessoa_t * )malloc( sizeof( pessoa_t ) );
     const pessoa_t *pBuffer;
     char *ptrNome;
-    const int *ptrIdade;
-    const int *ptrAltura;
+    int *ptrIdade;
+    int *ptrAltura;
 
     
     do {
