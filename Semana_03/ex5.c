@@ -7,19 +7,24 @@ typedef struct {
     int idade;
     int altura;
 } pessoa_t;
+
+pessoa_t *buffer;
+const pessoa_t *pBuffer;
+char *ptrNome;
+int *ptrIdade;
+int *ptrAltura;
+
+void SetPonteirosParaPessoaAtual(){
+    ptrNome = ( char * )pBuffer;
+    ptrIdade = ( int * )( pBuffer + sizeof( char )*30 );
+    ptrAltura = ( int * )( pBuffer + sizeof( char )*30 + sizeof( int ) );
+}
     
 int main() {
     char op = '1';
     int nPessoas = 0;
     char nome[30];
 
-    pessoa_t *buffer = ( pessoa_t * )malloc( sizeof( pessoa_t ) );
-    const pessoa_t *pBuffer;
-    char *ptrNome;
-    int *ptrIdade;
-    int *ptrAltura;
-
-    
     do {
         printf( "--------------------\nEscolha uma opcao\n1-Inserir nova pessoa\n0- Sair\nSua escolha: " );
 
@@ -36,9 +41,7 @@ int main() {
                 pBuffer++;
             }
 
-            ptrNome = ( char * )pBuffer;
-            ptrIdade = ( int * )( pBuffer + sizeof( char )*30 );
-            ptrAltura = ( int * )( pBuffer + sizeof( char )*30 + sizeof( int ) );
+            SetPonteirosParaPessoaAtual();
 
             printf( "\n--------------------\nInsira o nome da pessoa: " );
             setbuf( stdin, NULL );
@@ -59,9 +62,7 @@ int main() {
             pBuffer = buffer;
             for( int i = 0; i < nPessoas; i++ ){
             
-            ptrNome = ( char * )pBuffer;
-            ptrIdade = ( int * )( pBuffer + sizeof( char )* 30 );
-            ptrAltura = ( int * )( pBuffer + sizeof( char )*30 + sizeof( int ) );
+            SetPonteirosParaPessoaAtual();
 
             printf( "\n--------------------" );
             printf( "\nNome: %s", ptrNome );
@@ -69,8 +70,6 @@ int main() {
             printf( "\nAltura: %d", *ptrAltura );
             pBuffer++;
             }
-
-            free( buffer );
             break;
 
         default:
@@ -78,6 +77,9 @@ int main() {
             break;
         }
     } while ( op != '0' );
+
+    
+    free( buffer );
 
     return 0;
 }
