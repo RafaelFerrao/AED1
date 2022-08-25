@@ -9,7 +9,7 @@ typedef struct {
 } pessoa_t;
 
 pessoa_t *buffer;
-const pessoa_t *pBuffer;
+pessoa_t *pBuffer;
 char *ptrNome;
 int *ptrIdade;
 int *ptrAltura;
@@ -24,6 +24,8 @@ int main() {
     char op = '1';
     int nPessoas = 0;
     char nome[30];
+
+    buffer = ( pessoa_t * )malloc( sizeof( pessoa_t ) );
 
     do {
         printf( "--------------------\nEscolha uma opcao\n1-Inserir nova pessoa\n0- Sair\nSua escolha: " );
@@ -55,7 +57,7 @@ int main() {
             printf( "\nInsira a altura da pessoa: " );
             setbuf( stdin, NULL );
             scanf( "%d", ptrAltura );
-            system( "cls" );
+            // system( "cls" );
             break;
 
         case '0':
@@ -64,7 +66,7 @@ int main() {
             
             SetPonteirosParaPessoaAtual();
 
-            printf( "\n--------------------" );
+            printf( "\n---------------------" );
             printf( "\nNome: %s", ptrNome );
             printf( "\nIdade: %d", *ptrIdade );
             printf( "\nAltura: %d", *ptrAltura );
