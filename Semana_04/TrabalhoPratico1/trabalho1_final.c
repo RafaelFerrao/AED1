@@ -2,110 +2,164 @@
 #include <stdlib.h>
 #include <string.h>
 
+void *buffer;
+void *pBuffer;
+char *tipos;
+int sizeBuffer = 0;
+
+void ImprimeSequencia(int totalNums)
+{
+    pBuffer = buffer;
+    for (int i = 0; i < totalNums; i++)
+    {
+        printf("\n| %c |", tipos[i]);
+
+        if (tipos[i] == 'i')
+        {
+            printf(" %d ", *((int *)(pBuffer)));
+            pBuffer += sizeof(int);
+        }
+        else if (tipos[i] == 'f')
+        {
+            printf(" %f ", *((float *)(pBuffer)));
+            pBuffer += sizeof(float);
+        }
+        else if (tipos[i] == 'd')
+        {
+            printf(" %lf ", *((double *)(pBuffer)));
+            pBuffer += sizeof(double);
+        }
+    }
+}
+
+void ImprimeTipo(char tipoId, int totalNums)
+{
+    pBuffer = buffer;
+
+    for (int i = 0; i < totalNums; i++)
+    {
+        switch (tipoId)
+        {
+        case 'i':
+            if (tipos[i] == 'i')
+                printf("| %d ", *((int *)(pBuffer)));
+            break;
+        case 'f':
+            if (tipos[i] == 'f')
+                printf("| %f ", *((float *)(pBuffer)));
+            break;
+        case 'd':
+            if (tipos[i] == 'd')
+                printf("| %lf ", *((double *)(pBuffer)));
+            break;
+        }
+
+        if (tipos[i] == 'i')
+        {
+            pBuffer += sizeof(int);
+        }
+        else if (tipos[i] == 'f')
+        {
+            pBuffer += sizeof(float);
+        }
+        else if (tipos[i] == 'd')
+        {
+            pBuffer += sizeof(double);
+        }
+    }
+    printf("|");
+}
+
 int main(int argc, char const *argv[])
 {
-    void *buffer;
-    void *pBuffer;
-    char *tipos;
-    char *pTipos;
-    int sizeBuffer = 0;
     int totalNums = 0;
-    int op;
-    int opTipo;
+    char op;
+    char opTipo;
     buffer = malloc(sizeof(char));
     tipos = malloc(sizeof(char));
 
     do
     {
-        printf("\nVoce deseja inserir um numero? 1 - Sim;  2 - Nao: ");
+        printf("\nVoce deseja inserir um numero? S - Sim;  N - Nao: ");
         setbuf(stdin, NULL);
-        scanf("%d", &op);
+        scanf("%c", &op);
         switch (op)
         {
-        case 1:
+        case 'S':
             printf("\nQual o tipo do numero inserido? ");
-            printf("\n1- Inteiro");
-            printf("\n2- Double");
-            printf("\n3- Float");
+            printf("\nI- Inteiro");
+            printf("\nF- Float");
+            printf("\nD- Double");
             printf("\nSua escolha:");
 
             setbuf(stdin, NULL);
-            scanf("%d", &opTipo);
+            scanf("%c", &opTipo);
             printf("\nInsira o numero: ");
 
-            if (opTipo == 1)
+            if (opTipo == 'I' || opTipo == 'i')
             {
-                tipos = realloc( tipos, sizeof(char) * totalNums + 1);
-                pTipos = tipos;
-                pTipos[totalNums] = 'i';
+                tipos = realloc(tipos, sizeof(char) * totalNums + 1);
+                tipos[totalNums] = 'i';
                 sizeBuffer += sizeof(int);
                 buffer = realloc(buffer, sizeBuffer);
                 pBuffer = buffer;
-                if(totalNums == 0)
-                    scanf("%d", pBuffer);
-                else
-                    scanf("%d", pBuffer + sizeof(sizeBuffer) - sizeof(int));
+                pBuffer += sizeBuffer - sizeof(int);
+                setbuf(stdin, NULL);
+                scanf("%d", (int *)pBuffer);
                 totalNums++;
             }
-            else if (opTipo == 2)
-            {
-                sizeBuffer += sizeof(double);
-                buffer = realloc(buffer, sizeBuffer);
-                pBuffer = buffer;
-                if (totalNums == 0)
-                    scanf("%lf", pBuffer);
-                else
-                    scanf("%lf", pBuffer + sizeof(sizeBuffer) - sizeof(double));
 
-                pTipos = 'd';
-                pTipos++;
-                totalNums++;
-            }
-            else if (opTipo == 3)
+            else if (opTipo == 'F' || opTipo == 'f')
             {
+                tipos = realloc(tipos, sizeof(char) * totalNums + 1);
+                tipos[totalNums] = 'f';
                 sizeBuffer += sizeof(float);
                 buffer = realloc(buffer, sizeBuffer);
                 pBuffer = buffer;
-                if (totalNums == 0)
-                    scanf("%f", pBuffer);
-                else
-                    scanf("%f", pBuffer + sizeof(sizeBuffer) - sizeof(float));
-
-                pTipos = 'f';
-                pTipos++;
+                pBuffer += sizeBuffer - sizeof(float);
+                setbuf(stdin, NULL);
+                scanf("%f", (float *)pBuffer);
+                totalNums++;
+            }
+            else if (opTipo == 'D' || opTipo == 'd')
+            {
+                tipos = realloc(tipos, sizeof(char) * totalNums + 1);
+                tipos[totalNums] = 'd';
+                sizeBuffer += sizeof(double);
+                buffer = realloc(buffer, sizeBuffer);
+                pBuffer = buffer;
+                pBuffer += sizeBuffer - sizeof(double);
+                setbuf(stdin, NULL);
+                scanf("%lf", (double *)pBuffer);
                 totalNums++;
             }
             break;
 
-        case 2:
+        case 'N':
             break;
 
         default:
             printf("\nEntrada invalida, insira novamente");
             break;
         }
-    } while (op != 2);
+    } while (op != 'N');
 
-    pBuffer = buffer;
-    pTipos = tipos;
+    printf("\nValores sequenciais: ");
 
-    printf("%d", *((int *)(buffer)));
-    printf("| %d", *((int *)(pBuffer)));
+    ImprimeSequencia(totalNums);
 
-    // for (int i = 0; i < totalNums; i++) {
-    //     printf("\n| %c |", pTipos[i]);
-    //     if (pTipos[i] == 'i') {
-    //         printf(" %d ", *((int *)(pBuffer)));
-    //         pBuffer += sizeof(int);
-    //     }
-        // else if (*pTipos == 'f') {
-        //     printf(" %f ", *((float *)(pBuffer)));
-        //     pBuffer += sizeof(float);
-        // }
-        // else if (*pTipos == 'd') {
-        //     printf(" %lf ", *((double *)(pBuffer)));
-        //     pBuffer += sizeof(double);
-        // }
-        // pTipos++;
-    // }
+    printf("\nValores inteiros: ");
+
+    ImprimeTipo('i', totalNums);
+
+    printf("\nValores floats: ");
+
+    ImprimeTipo('f', totalNums);
+
+    printf("\nValores double: ");
+
+    ImprimeTipo('d', totalNums);
+
+    free(buffer);
+    free(tipos);
 }
