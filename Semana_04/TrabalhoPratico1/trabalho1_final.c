@@ -41,12 +41,10 @@ int main(int argc, char const *argv[])
                 sizeBuffer += sizeof(int);
                 buffer = realloc(buffer, sizeBuffer);
                 pBuffer = buffer;
-                if (totalNums == 0)
+                if(totalNums == 0)
                     scanf("%d", pBuffer);
                 else
                     scanf("%d", pBuffer + sizeof(sizeBuffer) - sizeof(int));
-
-                pTipos++;
                 totalNums++;
             }
             else if (opTipo == 2)
@@ -91,20 +89,23 @@ int main(int argc, char const *argv[])
     pBuffer = buffer;
     pTipos = tipos;
 
-    for (int i = 0; i < totalNums; i++) {
-        printf("\n| %c |", &pTipos)
-        if (pTipos[i] == 'i') {
-            printf(" %d ", *((int *)(pBuffer)));
-            pBuffer += sizeof(int);
-        }
-        else if (*pTipos == 'f') {
-            printf(" %f ", *((float *)(pBuffer)));
-            pBuffer += sizeof(float);
-        }
-        else if (*pTipos == 'd') {
-            printf(" %lf ", *((double *)(pBuffer)));
-            pBuffer += sizeof(double);
-        }
-        pTipos++;
-    }
+    printf("%d", *((int *)(buffer)));
+    printf("| %d", *((int *)(pBuffer)));
+
+    // for (int i = 0; i < totalNums; i++) {
+    //     printf("\n| %c |", pTipos[i]);
+    //     if (pTipos[i] == 'i') {
+    //         printf(" %d ", *((int *)(pBuffer)));
+    //         pBuffer += sizeof(int);
+    //     }
+        // else if (*pTipos == 'f') {
+        //     printf(" %f ", *((float *)(pBuffer)));
+        //     pBuffer += sizeof(float);
+        // }
+        // else if (*pTipos == 'd') {
+        //     printf(" %lf ", *((double *)(pBuffer)));
+        //     pBuffer += sizeof(double);
+        // }
+        // pTipos++;
+    // }
 }
