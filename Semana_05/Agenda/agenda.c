@@ -124,8 +124,6 @@ int main(int argc, char const *argv[])
             {
                 if (strcmp(pessoaAtual, pBusca) == 0)
                 {
-                    printf("A: %d", GetNPessoas());
-                    printf("B: %d", GetI());
                     GetNPessoas();
                     (*(int *)(ppBuffer))--;
                     if(GetI() != GetNPessoas()){
