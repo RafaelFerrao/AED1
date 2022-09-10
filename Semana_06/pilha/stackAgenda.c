@@ -95,6 +95,8 @@ void List(Stack *stack)
         p = Pop(temp);
         Push(stack, &p);
     }
+    free(temp);
+    temp = NULL;
 }
 
 void DeleteByName(Stack *stack, char *name)
@@ -117,6 +119,8 @@ void DeleteByName(Stack *stack, char *name)
             Push(stack, &p);
         }
     }
+    free(temp);
+    temp = NULL;
 }
 
 int main(int argc, char const *argv[])
@@ -180,6 +184,6 @@ int main(int argc, char const *argv[])
         }
 
     } while (op != '5');
-
+    free(s);
     return 0;
 }
