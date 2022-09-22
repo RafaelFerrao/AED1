@@ -14,7 +14,7 @@ int *pIdade;
 void *pTelefone;
 void *pBusca;
 
-int GetNPessoas() {
+int GetNPessoas() { 
     ppBuffer = pBuffer;
     ppBuffer += sizeof( int ) + sizeof( int );
     return *( int * )( ppBuffer );
@@ -33,7 +33,6 @@ int SizeCabecalho() {
 int SizePessoa() {
     return ( sizeof( char ) * 10 + sizeof( int ) + sizeof( char ) * 18 );
 } // | Nome | Idade | Telefone
-
 
 void NextPessoa() {
     pessoaAtual += SizePessoa();
@@ -82,6 +81,9 @@ int main(int argc, char const *argv[]) {
             GetI();
 
             for ( *( int * )( ppBuffer ) = 1; GetNPessoas() > GetI(); ( *( int * )( ppBuffer ) )++ ) {
+                // if(strcmp(pessoaAtual, GetBusca()) < 1){
+                //     break;
+                // }
                 NextPessoa();
             }
 
@@ -163,3 +165,15 @@ int main(int argc, char const *argv[]) {
 
     return 0;
 }
+
+// 'a' = 97;
+// 'z' = 122;
+// 'm' = 109;
+// 'n' = 110;
+
+// pivot = 109.5;
+// math.floor(pivot);
+// math.ceil(pivot);
+
+// abcdefghijklmnopqrtuv
+
