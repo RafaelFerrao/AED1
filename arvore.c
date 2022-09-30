@@ -29,13 +29,19 @@ Tree *Reset() {
 }
 
 Node *CreateNode(char *name, int age, int tel) {
+    printf("\n%s, %d, %d", name, age, tel);
+
     Node *n = (Node *)malloc(sizeof(Node));
-    n->person.name = (char *)malloc(sizeof(name));
+    n->person.name = (char *)malloc(sizeof(char) * (strlen(name) + 1));
     strcpy(n->person.name, name);
     n->person.age = age;
     n->person.tel = tel;
     n->left = NULL;
     n->right = NULL;
+
+    printf("\n%s, %d, %d", n->person.name, n->person.age, n->person.tel);
+
+
     return n;
 }
 
@@ -77,10 +83,28 @@ void Search(Node *root, char *name) {
 int main(int argc, char const *argv[]) {
 
     Tree *tree = Reset();
+
     Push(tree, CreateNode("Rafael", 20, 36710015));
+    Push(tree, CreateNode("Bernardo", 21, 10));
+    Push(tree, CreateNode("Daniel", 19, 66674532));
+    Push(tree, CreateNode("Gustavo", 27, 66674532));
+    Push(tree, CreateNode("Ana", 63, 66674532));
+    Push(tree, CreateNode("Roberto Carlos", 97, 66674532));
+
     printf("\n%s", tree->root->person.name);
-    Push(tree, CreateNode("Bernardo", 21, 36710222));
-    Search(tree->root, "Bernardo");
+    printf("\n%s", tree->root->left->person.name);
+    printf("\n%s", tree->root->left->left->person.name);
+    printf("\n%s", tree->root->left->right->left->person.name);
+
+
+
+    // Node *n1 = CreateNode("Gustavo", 23, 36718989);
+    // Node *n2 = CreateNode("Rafael", 20, 36710015);
+    // Node *n3 = CreateNode("Bernardo", 21, 98280980);
+    // Node *n4 = CreateNode("Daniel", 17, 97657649);
+    // Node *n5 = CreateNode("Thiago", 16, 99998888);
+
+    // Search(tree->root, "Henrique");
 
     return 0;
 }
