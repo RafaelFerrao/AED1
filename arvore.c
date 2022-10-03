@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+int balancementFactorChoice = 0;
+
 typedef struct _person {
     char *name;
     int age;
@@ -29,8 +31,6 @@ Tree *Reset() {
 }
 
 Node *CreateNode(char *name, int age, int tel) {
-    printf("\n%s, %d, %d", name, age, tel);
-
     Node *n = (Node *)malloc(sizeof(Node));
     n->person.name = (char *)malloc(sizeof(char) * (strlen(name) + 1));
     strcpy(n->person.name, name);
@@ -39,14 +39,22 @@ Node *CreateNode(char *name, int age, int tel) {
     n->left = NULL;
     n->right = NULL;
 
-    printf("\n%s, %d, %d", n->person.name, n->person.age, n->person.tel);
-
-
     return n;
 }
 
 void InsertNode(Node *root, Node *n) {
-    if(strcmp(n->person.name, root->person.name) < 1)
+    int result = 0;
+    if(balancementFactorChoice == 0)
+        result = strcmp(n->person.name, root->person.name) < 1;
+    else 
+        if (balancementFactorChoice == 1)
+            result = n->person.age < root->person.age;
+        else 
+            if (balancementFactorChoice == 2)
+                result = n->person.tel < root->person.tel;
+
+
+    if(result == 1)
         if(root->left == NULL)
             root->left = n;
         else
@@ -65,9 +73,13 @@ void Push(Tree *tree, Node *n) {
         InsertNode(tree->root, n);
 }
 
+void PrintPerson(Node *n) {
+        printf("\nName: %s | Age: %d | Telephone: %d", n->person.name, n->person.age, n->person.tel);
+}
+
 void Search(Node *root, char *name) {
     if(strcmp(name, root->person.name) == 0){
-        printf("\nName: %s | Age: %d | Telephone: %d", root->person.name, root->person.age, root->person.tel);
+        PrintPerson(root);
         return;
     } else {
         if(strcmp(name, root->person.name) < 1) {
@@ -80,31 +92,99 @@ void Search(Node *root, char *name) {
     }
 }
 
+void PreOrder(Node *root){
+    PrintPerson(root);
+    if(root->left != NULL)
+        PreOrder(root->left);
+    if(root->right != NULL)
+        PreOrder(root->right);
+}
+
+char *ReadName() {
+    char *str = NULL;
+    int i = 0, j = 2, c;
+    str = (char*)malloc(sizeof(char));
+    //error checking
+    if (str == NULL) {
+        printf("Error allocating memory\n");
+        exit(EXIT_FAILURE);
+    }
+
+    while((c = getc(stdin)) && c != '\n')
+    {
+        str[i] = c;
+        str = realloc(str,j*sizeof(char));
+        //error checking
+        if (str == NULL) {
+            printf("Error allocating memory\n");
+            free(str);
+            exit(EXIT_FAILURE);
+        }
+
+        i++;
+        j++;
+    }
+    str[i] = '\0';
+    printf("\n%s", str);
+    return str;
+}
+
 int main(int argc, char const *argv[]) {
+    
+    do
+    {
+        printf("\nWich Balancement Factor you want to use to insert, remove and search elements in the tree?");
+        printf("\n 0 - Name");
+        printf("\n 1 - Age");
+        printf("\n 2 - Telephone");
+        printf("\nYour choice: ");
+        scanf("%d", &balancementFactorChoice);
+
+    } while (balancementFactorChoice < 0 || balancementFactorChoice > 2);
+    
+    printf("\nBalance Factor set!\n");
+
 
     Tree *tree = Reset();
 
-    Push(tree, CreateNode("Rafael", 20, 36710015));
-    Push(tree, CreateNode("Bernardo", 21, 10));
-    Push(tree, CreateNode("Daniel", 19, 66674532));
-    Push(tree, CreateNode("Gustavo", 27, 66674532));
-    Push(tree, CreateNode("Ana", 63, 66674532));
-    Push(tree, CreateNode("Roberto Carlos", 97, 66674532));
+    int userSelect = 1, age, tel;
+    char *name;
 
-    printf("\n%s", tree->root->person.name);
-    printf("\n%s", tree->root->left->person.name);
-    printf("\n%s", tree->root->left->left->person.name);
-    printf("\n%s", tree->root->left->right->left->person.name);
+    do
+    {
+        
+        printf("\n1 - Insert person");
+        printf("\n2 - Remove person");
+        printf("\n3 - Search person");
+        printf("\n0 - Exit");
+        printf("\nYour choice:");
+        setbuf( stdin, NULL );
+        scanf("%d", &userSelect);
+
+        switch (userSelect)
+        {
+        case 1:
+            printf("\nInsert the person's name: ");
+            setbuf( stdin, NULL );
+            name = ReadName();
+            printf("\nInsert the person's age: ");
+            setbuf( stdin, NULL );
+            scanf("%d", &age);
+            printf("\nInsert the person's telephone: ");
+            setbuf( stdin, NULL );
+            scanf("%d", &tel);
+
+            Push(tree, CreateNode(name, age, tel));
+
+            break;
+        
+        default:
+            break;
+        }
+
+    } while (userSelect != 0);
 
 
-
-    // Node *n1 = CreateNode("Gustavo", 23, 36718989);
-    // Node *n2 = CreateNode("Rafael", 20, 36710015);
-    // Node *n3 = CreateNode("Bernardo", 21, 98280980);
-    // Node *n4 = CreateNode("Daniel", 17, 97657649);
-    // Node *n5 = CreateNode("Thiago", 16, 99998888);
-
-    // Search(tree->root, "Henrique");
-
+    PreOrder(tree->root);
     return 0;
 }
