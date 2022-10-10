@@ -42,35 +42,98 @@ Node *CreateNode(char *name, int age, int tel) {
     return n;
 }
 
-void InsertNode(Node *root, Node *n) {
-    int result = 0;
-    if(balancementFactorChoice == 0)
-        result = strcmp(n->person.name, root->person.name) < 1;
-    else 
-        if (balancementFactorChoice == 1)
-            result = n->person.age < root->person.age;
-        else 
-            if (balancementFactorChoice == 2)
-                result = n->person.tel < root->person.tel;
+int Height(Node *root) {
+    int left = 0, right = 0;
+    if(root == NULL)
+        return 0;
+    else {
+        left = Height(root->left);
+        right = Height(root->right);
 
+        if(left > right)
+            return left + 1;
+        else
+            return right + 1;
+    }
 
-    if(result == 1)
-        if(root->left == NULL)
-            root->left = n;
-        else
-            InsertNode(root->left, n);
-    else
-        if(root->right == NULL)
-            root->right = n;
-        else
-            InsertNode(root->right, n);
 }
 
-void Push(Tree *tree, Node *n) {
-    if(tree->root == NULL)
-        tree->root = n;
+int VerifyBF(Node *root) {
+    int heightLeft = 0;
+    int heightRight = 0;
+
+    if(root->left != NULL) 
+        heightLeft = Height(root->left);
+
+    if(root->right != NULL) 
+        heightRight = Height(root->left);
+    
+    return heightLeft - heightRight;
+
+}
+
+void SRL(Node** root)
+{
+    Node *nodeTemp;
+    nodeTemp = (*root)->right;
+    (*root)->right = nodeTemp->left;
+    nodeTemp->left = (*root);
+    (*root) = nodeTemp;
+}
+
+void SRR(Node** root)
+{
+    Node *nodeTemp;
+    nodeTemp = (*root)->left;
+    (*root)->left = nodeTemp->right;
+    nodeTemp->right = (*root);
+    (*root) = nodeTemp;
+}
+
+int BalanceLeft(Node **root) {
+    int bf = VerifyBF( (*root)->left );
+    if(bf > 0) {
+        SRR(root);
+        return 1;
+    }
+    else if ( bf < 0) {
+        SRL( &((*root)->left));
+        SRR( root );
+        return 1;
+    }
+    return 0;
+}
+
+int BalanceRight(Node **root) {
+    int bf = VerifyBF( (*root)->left );
+    if(bf < 0) {
+        SRL(root);
+        return 1;
+    }
+    else if ( bf > 0) {
+        SRR( &((*root)->left));
+        SRL( root );
+        return 1;
+    }
+    return 0;
+}
+
+int Balance(Node *root) {
+    int bf = VerifyBF(root);
+
+    if (bf > 1)
+        return BalanceLeft(&root);
+    else if (bf < -1)
+        return BalanceRight(&root);
     else
-        InsertNode(tree->root, n);
+        return 0;
+}
+
+int IsLeaf(Node *root) {
+    if(root->left == NULL && root->right == NULL)
+        return 1;
+    else
+        return 0;
 }
 
 void PrintPerson(Node *n) {
@@ -92,12 +155,56 @@ void Search(Node *root, char *name) {
     }
 }
 
+void InsertNode(Node *root, Node *n) {
+    int result = 0;
+    if(balancementFactorChoice == 0)
+        result = strcmp(n->person.name, root->person.name) < 1;
+    else 
+        if (balancementFactorChoice == 1)
+            result = n->person.age < root->person.age;
+        else 
+            if (balancementFactorChoice == 2)
+                result = n->person.tel < root->person.tel;
+
+    if(result == 1)
+        if(root->left == NULL)
+            root->left = n;
+        else
+            InsertNode(root->left, n);
+    else
+        if(root->right == NULL)
+            root->right = n;
+        else
+            InsertNode(root->right, n);
+
+    Balance(root);
+}
+
+void Push(Tree *tree, Node *n) {
+    if(tree->root == NULL)
+        tree->root = n;
+    else
+        InsertNode(tree->root, n);
+}
+
 void PreOrder(Node *root){
     PrintPerson(root);
     if(root->left != NULL)
         PreOrder(root->left);
     if(root->right != NULL)
         PreOrder(root->right);
+}
+
+void Central(Node *root){
+    if(IsLeaf(root) == 1)
+        PrintPerson(root);
+    else {
+        if(root->left != NULL)
+            Central(root->left);
+        PrintPerson(root);
+        if(root->right != NULL) 
+            Central(root->right);          
+    }
 }
 
 char *ReadName() {
@@ -147,7 +254,7 @@ int main(int argc, char const *argv[]) {
 
     Tree *tree = Reset();
 
-    int userSelect = 1, age, tel;
+    int userSelect = 1, age, tel, printOrder = 0;
     char *name;
 
     do
@@ -156,6 +263,8 @@ int main(int argc, char const *argv[]) {
         printf("\n1 - Insert person");
         printf("\n2 - Remove person");
         printf("\n3 - Search person");
+        printf("\n4 - Print tree");
+
         printf("\n0 - Exit");
         printf("\nYour choice:");
         setbuf( stdin, NULL );
@@ -177,6 +286,23 @@ int main(int argc, char const *argv[]) {
             Push(tree, CreateNode(name, age, tel));
 
             break;
+
+        case 4:
+
+            do {
+                printf("\nInsert the print order you wish:");
+                printf("\n1 - PreOrder");
+                printf("\n2 - Central");
+                printf("\nYour choice: ");
+
+                scanf("%d", &printOrder);
+                if (printOrder == 1)
+                    PreOrder(tree->root);
+                else if (printOrder == 2)
+                    Central(tree->root);
+                else
+                    printOrder = 0;
+            } while (printOrder < 1 || printOrder > 3);
         
         default:
             break;
@@ -184,7 +310,6 @@ int main(int argc, char const *argv[]) {
 
     } while (userSelect != 0);
 
-
-    PreOrder(tree->root);
+    Central(tree->root);
     return 0;
 }
