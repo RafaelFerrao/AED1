@@ -66,7 +66,7 @@ int VerifyBF(Node *root) {
         heightLeft = Height(root->left);
 
     if(root->right != NULL) 
-        heightRight = Height(root->left);
+        heightRight = Height(root->right);
     
     return heightLeft - heightRight;
 
@@ -215,21 +215,25 @@ void PostOrder(Node *root) {
     PrintPerson(root);
 }
 
-void PrintTreeIdentationStyle(Node *n) {
-    int height = Height(n);
+void PrintTreeIdentationStyle(Node *n, int depth) {
+    depth += 1;
     if(IsLeaf(n) == 1){
-        for(int i = 0; i < height; i++)
-            printf(" ");
-        printf("Name: %s | Age: %d | Telephone: %d | alt: %d \n", n->person.name, n->person.age, n->person.tel, Height(n));
+        for(int i = 0; i < depth; i++)
+            printf("    ");
+        printf("Name: %s | Age: %d | Telephone: %d | depth: %d \n", n->person.name, n->person.age, n->person.tel, depth);
     }
     else {
+        
         if(n->left != NULL)
-            PrintTreeIdentationStyle(n->left);
-        for(int i = 0; i < height; i++)
-            printf(" ");
-        printf("Name: %s | Age: %d | Telephone: %d | alt: %d\n", n->person.name, n->person.age, n->person.tel, Height(n));
+            PrintTreeIdentationStyle(n->left, depth);
+
+        for(int i = 0; i < depth; i++)
+                printf("    ");
+        printf("Name: %s | Age: %d | Telephone: %d | depth: %d\n", n->person.name, n->person.age, n->person.tel, depth);
+        
         if(n->right != NULL)
-            PrintTreeIdentationStyle(n->right);    
+            PrintTreeIdentationStyle(n->right, depth);
+            
     }
 }
 
@@ -333,7 +337,7 @@ int main(int argc, char const *argv[]) {
                 else if (printOrder == 3)
                     PostOrder(tree->root);
                 else if (printOrder == 4)
-                    PrintTreeIdentationStyle(tree->root);
+                    PrintTreeIdentationStyle(tree->root, 0);
                 else
                     printOrder = 0;
             } while (printOrder < 1 || printOrder > 4);
