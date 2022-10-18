@@ -16,6 +16,7 @@ typedef struct _person {
 
 typedef struct _node {
     Person person;
+    
     struct _node *left;
     struct _node *right;
 } Node;
@@ -215,7 +216,7 @@ void PostOrder(Node *root) {
     PrintPerson(root);
 }
 
-void PrintTreeIdentationStyle(Node *n, int depth) {
+void PrintTreeIdentedStyle(Node *n, int depth) {
     depth += 1;
     if(IsLeaf(n) == 1){
         for(int i = 0; i < depth; i++)
@@ -324,7 +325,7 @@ int main(int argc, char const *argv[]) {
                 printf("\n1 - PreOrder");
                 printf("\n2 - Central");
                 printf("\n3 - PostOrder");
-                printf("\n4 - Central with identation style");
+                printf("\n4 - Central with identation");
 
 
                 printf("\nYour choice: ");
@@ -337,7 +338,7 @@ int main(int argc, char const *argv[]) {
                 else if (printOrder == 3)
                     PostOrder(tree->root);
                 else if (printOrder == 4)
-                    PrintTreeIdentationStyle(tree->root, 0);
+                    PrintTreeIdentedStyle(tree->root, 0);
                 else
                     printOrder = 0;
             } while (printOrder < 1 || printOrder > 4);
